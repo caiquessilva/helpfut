@@ -8,6 +8,13 @@
       "when": 1789153829432,
       "tag": "0000_create_team_accounts",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1789154272088,
+      "tag": "0001_add_admin_roles_and_account_controls",
+      "breakpoints": true
     }
   ]
 }
