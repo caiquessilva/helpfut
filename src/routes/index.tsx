@@ -31,6 +31,8 @@ function Varzea() {
   const [erroCep, setErroCep] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const [novoHorario, setNovoHorario] = useState<Partial<Record<Dia, string>>>({});
+  const [admin, setAdmin] = useState(false);
+  const [diaAberto, setDiaAberto] = useState<Dia | null>(null);
 
   const buscarCep = async () => {
     const cep = time.cep.replace(/\D/g, "");
