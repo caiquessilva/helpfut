@@ -31,21 +31,25 @@ export interface Trofeu {
 }
 
 export type Posicao = "Goleiro" | "Defesa" | "Meio-campo" | "Ataque";
-export type Nivel = "Café com Leite" | "Mediano" | "Destaque" | "Já jogou base/pro";
-export type Folego = "Pouco" | "Mediano" | "Mito/Inteiro";
+export type Estrelas = 1 | 2 | 3 | 4 | 5;
 
 export interface Jogador {
   id: string;
   nome: string;
   idade: number;
   posicao: Posicao;
-  nivel: Nivel;
-  folego: Folego;
+  estrelas: Estrelas;
   presente: boolean;
 }
 
-export const NIVEIS: Nivel[] = ["Café com Leite", "Mediano", "Destaque", "Já jogou base/pro"];
-export const FOLEGOS: Folego[] = ["Pouco", "Mediano", "Mito/Inteiro"];
+export const ESTRELAS: Estrelas[] = [1, 2, 3, 4, 5];
+export const LEGENDA_ESTRELAS: Record<Estrelas, string> = {
+  1: "Iniciante / Mais fraco",
+  2: "Básico",
+  3: "Mediano",
+  4: "Bom jogador",
+  5: "Craque / Mais forte",
+};
 export const POSICOES: Posicao[] = ["Goleiro", "Defesa", "Meio-campo", "Ataque"];
 export const DIAS: Dia[] = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 export const PERIODOS: Periodo[] = ["Manhã", "Tarde", "Noite"];
@@ -56,14 +60,11 @@ export function pontosIdade(idade: number) {
   if (idade <= 49) return 2;
   return 1;
 }
-export function pontosNivel(n: Nivel) {
-  return NIVEIS.indexOf(n) + 1;
-}
-export function pontosFolego(f: Folego) {
-  return FOLEGOS.indexOf(f) + 1;
+export function pontosEstrelas(e: Estrelas | undefined) {
+  return (e ?? 3) * 2;
 }
 export function scoreTotal(j: Jogador) {
-  return pontosIdade(j.idade) + pontosNivel(j.nivel) + pontosFolego(j.folego);
+  return pontosIdade(j.idade) + pontosEstrelas(j.estrelas);
 }
 
 const timeInicial: Time = {
@@ -104,25 +105,24 @@ function j(
   nome: string,
   idade: number,
   posicao: Posicao,
-  nivel: Nivel,
-  folego: Folego,
+  estrelas: Estrelas,
 ): Jogador {
-  return { id, nome, idade, posicao, nivel, folego, presente: true };
+  return { id, nome, idade, posicao, estrelas, presente: true };
 }
 
 const jogadoresIniciais: Jogador[] = [
-  j("p1", "Marcão", 41, "Goleiro", "Destaque", "Mediano"),
-  j("p2", "Léo Paredão", 28, "Goleiro", "Mediano", "Pouco"),
-  j("p3", "Rafa", 22, "Defesa", "Já jogou base/pro", "Mito/Inteiro"),
-  j("p4", "Tião", 36, "Defesa", "Mediano", "Mediano"),
-  j("p5", "Juninho", 19, "Meio-campo", "Destaque", "Mito/Inteiro"),
-  j("p6", "Serginho", 52, "Meio-campo", "Mediano", "Pouco"),
-  j("p7", "Vitinho", 24, "Ataque", "Destaque", "Mediano"),
-  j("p8", "Betão", 45, "Ataque", "Café com Leite", "Pouco"),
-  j("p9", "Diego", 31, "Defesa", "Destaque", "Mediano"),
-  j("p10", "Kaio", 20, "Ataque", "Mediano", "Mito/Inteiro"),
-  j("p11", "Fernando", 38, "Meio-campo", "Já jogou base/pro", "Mediano"),
-  j("p12", "Zeca", 47, "Defesa", "Mediano", "Pouco"),
+  j("p1", "Marcão", 41, "Goleiro", 4),
+  j("p2", "Léo Paredão", 28, "Goleiro", 2),
+  j("p3", "Rafa", 22, "Defesa", 5),
+  j("p4", "Tião", 36, "Defesa", 3),
+  j("p5", "Juninho", 19, "Meio-campo", 4),
+  j("p6", "Serginho", 52, "Meio-campo", 2),
+  j("p7", "Vitinho", 24, "Ataque", 4),
+  j("p8", "Betão", 45, "Ataque", 1),
+  j("p9", "Diego", 31, "Defesa", 3),
+  j("p10", "Kaio", 20, "Ataque", 3),
+  j("p11", "Fernando", 38, "Meio-campo", 5),
+  j("p12", "Zeca", 47, "Defesa", 2),
 ];
 
 interface Store {
@@ -161,7 +161,11 @@ function usePersisted<T>(key: string, inicial: T) {
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [time, setTime] = usePersisted("helpfut.time", timeInicial);
   const [trofeus, setTrofeus] = usePersisted("helpfut.trofeus", trofeusIniciais);
-  const [jogadores, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
+  const [jogadoresRaw, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
+  const jogadores = React.useMemo(
+    () => jogadoresRaw.map((p) => ({ ...p, estrelas: (p.estrelas ?? 3) as Estrelas })),
+    [jogadoresRaw],
+  );
   const value = React.useMemo(
     () => ({ time, setTime, trofeus, setTrofeus, jogadores, setJogadores }),
     [time, setTime, trofeus, setTrofeus, jogadores, setJogadores],

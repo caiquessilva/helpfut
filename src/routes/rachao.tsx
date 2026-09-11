@@ -1,18 +1,59 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Star } from "lucide-react";
 import { Page, Card, Field, Input, Select, Button } from "@/components/ui-kit";
 import {
-  FOLEGOS,
-  NIVEIS,
+  ESTRELAS,
+  LEGENDA_ESTRELAS,
   POSICOES,
   scoreTotal,
   useStore,
-  type Folego,
+  type Estrelas,
   type Jogador,
-  type Nivel,
   type Posicao,
 } from "@/lib/store";
+
+function SeletorEstrelas({
+  valor,
+  onChange,
+}: {
+  valor: Estrelas;
+  onChange: (v: Estrelas) => void;
+}) {
+  return (
+    <div>
+      <div className="flex gap-1.5">
+        {ESTRELAS.map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${n} estrela${n > 1 ? "s" : ""} — ${LEGENDA_ESTRELAS[n]}`}
+            onClick={() => onChange(n)}
+            className="p-0.5"
+          >
+            <Star
+              className={
+                n <= valor
+                  ? "size-7 fill-primary text-primary"
+                  : "size-7 text-muted-foreground"
+              }
+            />
+          </button>
+        ))}
+      </div>
+      <p className="mt-1.5 text-xs font-semibold text-primary">
+        {valor} ★ — {LEGENDA_ESTRELAS[valor]}
+      </p>
+      <ul className="mt-1 space-y-0.5 text-[11px] leading-tight text-muted-foreground">
+        {ESTRELAS.map((n) => (
+          <li key={n}>
+            {n} estrela{n > 1 ? "s" : ""} = {LEGENDA_ESTRELAS[n]}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/rachao")({
   head: () => ({
@@ -37,8 +78,7 @@ const vazio = {
   nome: "",
   idade: "25",
   posicao: "Meio-campo" as Posicao,
-  nivel: "Mediano" as Nivel,
-  folego: "Mediano" as Folego,
+  estrelas: 3 as Estrelas,
 };
 
 function Rachao() {
@@ -53,8 +93,7 @@ function Rachao() {
       nome: form.nome,
       idade: Number(form.idade) || 0,
       posicao: form.posicao,
-      nivel: form.nivel,
-      folego: form.folego,
+      estrelas: form.estrelas,
       presente: true,
     };
     setJogadores([...jogadores, novo]);
@@ -91,26 +130,14 @@ function Rachao() {
               ))}
             </Select>
           </Field>
-          <Field label="Nível técnico">
-            <Select
-              value={form.nivel}
-              onChange={(e) => setForm({ ...form, nivel: e.target.value as Nivel })}
-            >
-              {NIVEIS.map((n) => (
-                <option key={n}>{n}</option>
-              ))}
-            </Select>
-          </Field>
-          <Field label="Fôlego">
-            <Select
-              value={form.folego}
-              onChange={(e) => setForm({ ...form, folego: e.target.value as Folego })}
-            >
-              {FOLEGOS.map((f) => (
-                <option key={f}>{f}</option>
-              ))}
-            </Select>
-          </Field>
+          <div className="col-span-2">
+            <Field label="Avaliação geral">
+              <SeletorEstrelas
+                valor={form.estrelas}
+                onChange={(v) => setForm({ ...form, estrelas: v })}
+              />
+            </Field>
+          </div>
         </div>
         <Button className="w-full" onClick={adicionar}>
           Cadastrar jogador
@@ -140,8 +167,30 @@ function Rachao() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-foreground">{j.nome}</p>
                 <p className="text-xs text-muted-foreground">
-                  {j.posicao} · {j.idade} anos · {j.nivel} · {j.folego}
+                  {j.posicao} · {j.idade} anos · {LEGENDA_ESTRELAS[j.estrelas]}
                 </p>
+                <div className="mt-1 flex gap-0.5">
+                  {ESTRELAS.map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      aria-label={`Definir ${n} estrela${n > 1 ? "s" : ""} para ${j.nome}`}
+                      onClick={() =>
+                        setJogadores(
+                          jogadores.map((x) => (x.id === j.id ? { ...x, estrelas: n } : x)),
+                        )
+                      }
+                    >
+                      <Star
+                        className={
+                          n <= j.estrelas
+                            ? "size-4 fill-primary text-primary"
+                            : "size-4 text-muted-foreground"
+                        }
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
               <span className="rounded-lg bg-primary/15 px-2 py-1 text-xs font-bold text-primary">
                 {scoreTotal(j)} pts
