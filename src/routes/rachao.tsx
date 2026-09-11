@@ -78,8 +78,7 @@ const vazio = {
   nome: "",
   idade: "25",
   posicao: "Meio-campo" as Posicao,
-  nivel: "Mediano" as Nivel,
-  folego: "Mediano" as Folego,
+  estrelas: 3 as Estrelas,
 };
 
 function Rachao() {
