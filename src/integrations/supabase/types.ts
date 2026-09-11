@@ -91,6 +91,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_set_account_blocked: {
+        Args: { _is_blocked: boolean; _user_id: string }
+        Returns: undefined
+      }
       bootstrap_current_account: {
         Args: never
         Returns: {
