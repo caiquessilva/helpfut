@@ -16,7 +16,7 @@ const DIA_LONGO: Record<Dia, string> = {
   Dom: "Domingo",
 };
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/time")({
   head: () => ({
     meta: [
       { title: "HELPFUT — Perfil do Time de Várzea" },

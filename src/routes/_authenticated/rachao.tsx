@@ -55,7 +55,7 @@ function SeletorEstrelas({
   );
 }
 
-export const Route = createFileRoute("/rachao")({
+export const Route = createFileRoute("/_authenticated/rachao")({
   head: () => ({
     meta: [
       { title: "Rachão — Jogadores e Presença | HELPFUT" },

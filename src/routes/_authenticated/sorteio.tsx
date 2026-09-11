@@ -4,7 +4,7 @@ import { Shuffle } from "lucide-react";
 import { Page, Card, Button } from "@/components/ui-kit";
 import { estatisticas, scoreTotal, sortearTimes, useStore, type TimeSorteado } from "@/lib/store";
 
-export const Route = createFileRoute("/sorteio")({
+export const Route = createFileRoute("/_authenticated/sorteio")({
   head: () => ({
     meta: [
       { title: "Sorteio Inteligente de Times | HELPFUT" },
