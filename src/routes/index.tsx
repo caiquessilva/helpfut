@@ -236,61 +236,95 @@ function Varzea() {
         </Card>
 
         <Card className="space-y-3">
-          <h2 className="text-sm font-bold text-foreground">Dias e horários de jogo</h2>
-          <div className="space-y-3">
-            {DIAS.map((dia) => (
-              <div key={dia} className="space-y-1.5">
-                <div className="flex items-center gap-2">
-                  <span className="w-10 text-xs font-bold text-muted-foreground">{dia}</span>
-                  <Input
-                    type="time"
-                    aria-label={`Horário de jogo em ${dia}`}
-                    className="w-32"
-                    value={novoHorario[dia] ?? ""}
-                    onChange={(e) => setNovoHorario({ ...novoHorario, [dia]: e.target.value })}
-                  />
-                  <Button type="button" onClick={() => adicionarHorario(dia)}>
-                    Adicionar
-                  </Button>
-                </div>
-                {horariosDoDia(dia).length ? (
-                  <div className="ml-12 flex flex-wrap gap-1.5">
-                    {horariosDoDia(dia).map((h) => (
-                      <Chip
-                        key={h}
-                        active
-                        onClick={() =>
-                          setHorarios(
-                            dia,
-                            horariosDoDia(dia).filter((x) => x !== h),
-                          )
-                        }
-                      >
-                        {h} ✕
-                      </Chip>
-                    ))}
-                  </div>
-                ) : null}
-              </div>
-            ))}
+          <div className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-2">
+            <h2 className="truncate text-sm font-bold text-foreground">Dias e horários de jogo</h2>
+            <button
+              type="button"
+              onClick={() => {
+                setAdmin(!admin);
+                setDiaAberto(null);
+              }}
+              className="shrink-0 rounded-lg bg-secondary px-3 py-1.5 text-xs font-bold text-muted-foreground"
+            >
+              {admin ? "Concluir" : "Editar agenda"}
+            </button>
           </div>
 
-          <div className="rounded-xl bg-secondary/60 p-3">
-            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
-              Agenda do time
-            </span>
-            {agenda.length ? (
-              <ul className="space-y-1">
-                {agenda.map((d) => (
-                  <li key={d.dia} className="text-sm text-foreground">
-                    <span className="font-bold text-primary">{d.dia}</span> — {d.horarios.join(" · ")}
-                  </li>
+          {admin ? (
+            <div className="space-y-2">
+              <div className="flex flex-wrap gap-1.5">
+                {DIAS.map((dia) => (
+                  <Chip
+                    key={dia}
+                    active={horariosDoDia(dia).length > 0 || diaAberto === dia}
+                    className="px-2.5 py-1.5 text-xs uppercase"
+                    onClick={() => setDiaAberto(diaAberto === dia ? null : dia)}
+                  >
+                    {dia}
+                  </Chip>
                 ))}
-              </ul>
-            ) : (
-              <p className="text-xs text-muted-foreground">Nenhum dia definido ainda.</p>
-            )}
-          </div>
+              </div>
+
+              {diaAberto ? (
+                <div className="space-y-2 rounded-xl bg-secondary/60 p-3">
+                  <div className="flex items-center gap-2">
+                    <Input
+                      type="time"
+                      aria-label={`Horário de jogo em ${DIA_LONGO[diaAberto]}`}
+                      className="w-32"
+                      value={novoHorario[diaAberto] ?? ""}
+                      onChange={(e) => setNovoHorario({ ...novoHorario, [diaAberto]: e.target.value })}
+                    />
+                    <Button type="button" onClick={() => adicionarHorario(diaAberto)}>
+                      Adicionar
+                    </Button>
+                  </div>
+                  {horariosDoDia(diaAberto).length ? (
+                    <div className="flex flex-wrap gap-1.5">
+                      {horariosDoDia(diaAberto).map((h) => (
+                        <Chip
+                          key={h}
+                          active
+                          className="px-2.5 py-1 text-xs"
+                          onClick={() =>
+                            setHorarios(
+                              diaAberto,
+                              horariosDoDia(diaAberto).filter((x) => x !== h),
+                            )
+                          }
+                        >
+                          {h} ✕
+                        </Chip>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-muted-foreground">
+                      Nenhum horário em {DIA_LONGO[diaAberto]}.
+                    </p>
+                  )}
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground">Toque em um dia para definir o horário.</p>
+              )}
+            </div>
+          ) : null}
+
+          {agenda.length ? (
+            <div className="flex flex-wrap gap-1.5">
+              {agenda.flatMap((d) =>
+                d.horarios.map((h) => (
+                  <span
+                    key={`${d.dia}-${h}`}
+                    className="rounded-lg bg-primary/15 px-2.5 py-1.5 text-xs font-semibold text-primary"
+                  >
+                    {DIA_LONGO[d.dia]} · {h}
+                  </span>
+                )),
+              )}
+            </div>
+          ) : (
+            <p className="text-xs text-muted-foreground">Nenhum dia de jogo definido ainda.</p>
+          )}
           <div>
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               Mando de campo
