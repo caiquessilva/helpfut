@@ -322,12 +322,12 @@ function Varzea() {
           ) : null}
 
           {agenda.length ? (
-            <div className="flex flex-wrap gap-1.5">
+            <div className="flex flex-wrap gap-2">
               {agenda.flatMap((d) =>
                 d.horarios.map((h) => (
                   <span
                     key={`${d.dia}-${h}`}
-                    className="rounded-lg bg-primary/15 px-2.5 py-1.5 text-xs font-semibold text-primary"
+                    className="whitespace-nowrap rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold leading-tight text-primary"
                   >
                     {DIA_LONGO[d.dia]} · {h}
                   </span>
