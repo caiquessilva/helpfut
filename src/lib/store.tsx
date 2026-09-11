@@ -5,7 +5,7 @@ export type Dia = "Seg" | "Ter" | "Qua" | "Qui" | "Sex" | "Sáb" | "Dom";
 
 export interface Disponibilidade {
   dia: Dia;
-  periodos: Periodo[];
+  horarios: string[];
 }
 
 export interface Time {
@@ -79,8 +79,8 @@ const timeInicial: Time = {
   rua: "Praça da Sé",
   cidade: "São Paulo",
   disponibilidade: [
-    { dia: "Qua", periodos: ["Noite"] },
-    { dia: "Sáb", periodos: ["Manhã", "Tarde"] },
+    { dia: "Qua", horarios: ["20:00"] },
+    { dia: "Sáb", horarios: ["09:00", "15:30"] },
   ],
   mando: "Mandante",
 };
@@ -158,8 +158,18 @@ function usePersisted<T>(key: string, inicial: T) {
   return [state, set] as const;
 }
 
+const HORA_PERIODO: Record<string, string> = { "Manhã": "09:00", Tarde: "15:00", Noite: "20:00" };
+
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [time, setTime] = usePersisted("helpfut.time", timeInicial);
+  const [timeRaw, setTime] = usePersisted("helpfut.time", timeInicial);
+  const time = React.useMemo<Time>(() => {
+    const disponibilidade = (timeRaw.disponibilidade ?? []).map((d) => {
+      const legado = (d as unknown as { periodos?: string[] }).periodos;
+      const horarios = d.horarios ?? legado?.map((p) => HORA_PERIODO[p] ?? "20:00") ?? [];
+      return { dia: d.dia, horarios: [...new Set(horarios)].sort() };
+    });
+    return { ...timeRaw, disponibilidade };
+  }, [timeRaw]);
   const [trofeus, setTrofeus] = usePersisted("helpfut.trofeus", trofeusIniciais);
   const [jogadoresRaw, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
   const jogadores = React.useMemo(
