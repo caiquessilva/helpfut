@@ -31,21 +31,25 @@ export interface Trofeu {
 }
 
 export type Posicao = "Goleiro" | "Defesa" | "Meio-campo" | "Ataque";
-export type Nivel = "Café com Leite" | "Mediano" | "Destaque" | "Já jogou base/pro";
-export type Folego = "Pouco" | "Mediano" | "Mito/Inteiro";
+export type Estrelas = 1 | 2 | 3 | 4 | 5;
 
 export interface Jogador {
   id: string;
   nome: string;
   idade: number;
   posicao: Posicao;
-  nivel: Nivel;
-  folego: Folego;
+  estrelas: Estrelas;
   presente: boolean;
 }
 
-export const NIVEIS: Nivel[] = ["Café com Leite", "Mediano", "Destaque", "Já jogou base/pro"];
-export const FOLEGOS: Folego[] = ["Pouco", "Mediano", "Mito/Inteiro"];
+export const ESTRELAS: Estrelas[] = [1, 2, 3, 4, 5];
+export const LEGENDA_ESTRELAS: Record<Estrelas, string> = {
+  1: "Iniciante / Mais fraco",
+  2: "Básico",
+  3: "Mediano",
+  4: "Bom jogador",
+  5: "Craque / Mais forte",
+};
 export const POSICOES: Posicao[] = ["Goleiro", "Defesa", "Meio-campo", "Ataque"];
 export const DIAS: Dia[] = ["Seg", "Ter", "Qua", "Qui", "Sex", "Sáb", "Dom"];
 export const PERIODOS: Periodo[] = ["Manhã", "Tarde", "Noite"];
@@ -56,14 +60,11 @@ export function pontosIdade(idade: number) {
   if (idade <= 49) return 2;
   return 1;
 }
-export function pontosNivel(n: Nivel) {
-  return NIVEIS.indexOf(n) + 1;
-}
-export function pontosFolego(f: Folego) {
-  return FOLEGOS.indexOf(f) + 1;
+export function pontosEstrelas(e: Estrelas | undefined) {
+  return (e ?? 3) * 2;
 }
 export function scoreTotal(j: Jogador) {
-  return pontosIdade(j.idade) + pontosNivel(j.nivel) + pontosFolego(j.folego);
+  return pontosIdade(j.idade) + pontosEstrelas(j.estrelas);
 }
 
 const timeInicial: Time = {
