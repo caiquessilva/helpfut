@@ -2,12 +2,6 @@ import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { requireSupabaseAuth } from "@/integrations/supabase/auth-middleware";
 
-async function requireAdmin(
-  supabase: Parameters<Parameters<typeof requireSupabaseAuth.options.server>[0]>[0] extends never ? never : never,
-) {
-  return supabase;
-}
-
 export const getAdminTeams = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

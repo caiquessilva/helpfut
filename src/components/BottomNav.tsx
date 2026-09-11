@@ -1,6 +1,6 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useNavigate } from "@tanstack/react-router";
-import { Shield, Users, Shuffle, LogOut } from "lucide-react";
+import { Shield, Users, Shuffle, LogOut, ShieldCheck } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 
 const itens = [
@@ -9,7 +9,7 @@ const itens = [
   { to: "/sorteio", label: "Sorteio", Icon: Shuffle },
 ] as const;
 
-export function BottomNav() {
+export function BottomNav({ isAdmin = false }: { isAdmin?: boolean }) {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
@@ -37,6 +37,19 @@ export function BottomNav() {
             </Link>
           </li>
         ))}
+        {isAdmin ? (
+          <li className="flex-1">
+            <Link
+              to="/admin"
+              activeProps={{ className: "text-primary" }}
+              inactiveProps={{ className: "text-muted-foreground" }}
+              className="flex flex-col items-center gap-1 py-2.5 text-[11px] font-medium transition-colors"
+            >
+              <ShieldCheck className="size-5" />
+              Admin
+            </Link>
+          </li>
+        ) : null}
         <li className="flex-1">
           <button
             type="button"
