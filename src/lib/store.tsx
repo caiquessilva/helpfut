@@ -90,14 +90,12 @@ const trofeusIniciais: Trofeu[] = [
     titulo: "Copa Zona Leste",
     ano: "2023",
     descricao: "Campeão invicto, 7 vitórias em 7 jogos.",
-    foto: "",
   },
   {
     id: "t2",
     titulo: "Torneio da Vila",
     ano: "2021",
     descricao: "Vitória nos pênaltis na final.",
-    foto: "",
   },
 ];
 
