@@ -1,9 +1,8 @@
 import { Link } from "@tanstack/react-router";
-import { Shield, Trophy, Users, Shuffle } from "lucide-react";
+import { Shield, Users, Shuffle } from "lucide-react";
 
 const itens = [
   { to: "/", label: "Time", Icon: Shield },
-  { to: "/trofeus", label: "Troféus", Icon: Trophy },
   { to: "/rachao", label: "Rachão", Icon: Users },
   { to: "/sorteio", label: "Sorteio", Icon: Shuffle },
 ] as const;
