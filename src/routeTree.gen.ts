@@ -10,53 +10,84 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as RachaoRouteImport } from './routes/rachao'
-import { Route as SorteioRouteImport } from './routes/sorteio'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as AuthenticatedRachaoRouteImport } from './routes/_authenticated/rachao'
+import { Route as AuthenticatedSorteioRouteImport } from './routes/_authenticated/sorteio'
+import { Route as AuthenticatedTimeRouteImport } from './routes/_authenticated/time'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const RachaoRoute = RachaoRouteImport.update({
-  id: '/rachao',
-  path: '/rachao',
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SorteioRoute = SorteioRouteImport.update({
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRachaoRoute = AuthenticatedRachaoRouteImport.update({
+  id: '/rachao',
+  path: '/rachao',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedSorteioRoute = AuthenticatedSorteioRouteImport.update({
   id: '/sorteio',
   path: '/sorteio',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedTimeRoute = AuthenticatedTimeRouteImport.update({
+  id: '/time',
+  path: '/time',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
-  '/rachao': typeof RachaoRoute
-  '/sorteio': typeof SorteioRoute
+  '/auth': typeof AuthRoute
+  '/rachao': typeof AuthenticatedRachaoRoute
+  '/sorteio': typeof AuthenticatedSorteioRoute
+  '/time': typeof AuthenticatedTimeRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/rachao': typeof RachaoRoute
-  '/sorteio': typeof SorteioRoute
+  '/auth': typeof AuthRoute
+  '/rachao': typeof AuthenticatedRachaoRoute
+  '/sorteio': typeof AuthenticatedSorteioRoute
+  '/time': typeof AuthenticatedTimeRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
-  '/rachao': typeof RachaoRoute
-  '/sorteio': typeof SorteioRoute
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/auth': typeof AuthRoute
+  '/_authenticated/rachao': typeof AuthenticatedRachaoRoute
+  '/_authenticated/sorteio': typeof AuthenticatedSorteioRoute
+  '/_authenticated/time': typeof AuthenticatedTimeRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/rachao' | '/sorteio'
+  fullPaths: '/' | '/auth' | '/rachao' | '/sorteio' | '/time'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/rachao' | '/sorteio'
-  id: '__root__' | '/' | '/rachao' | '/sorteio'
+  to: '/' | '/auth' | '/rachao' | '/sorteio' | '/time'
+  id:
+    | '__root__'
+    | '/'
+    | '/_authenticated'
+    | '/auth'
+    | '/_authenticated/rachao'
+    | '/_authenticated/sorteio'
+    | '/_authenticated/time'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
-  RachaoRoute: typeof RachaoRoute
-  SorteioRoute: typeof SorteioRoute
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  AuthRoute: typeof AuthRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -68,27 +99,63 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/rachao': {
-      id: '/rachao'
-      path: '/rachao'
-      fullPath: '/rachao'
-      preLoaderRoute: typeof RachaoRouteImport
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/sorteio': {
-      id: '/sorteio'
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/rachao': {
+      id: '/_authenticated/rachao'
+      path: '/rachao'
+      fullPath: '/rachao'
+      preLoaderRoute: typeof AuthenticatedRachaoRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/sorteio': {
+      id: '/_authenticated/sorteio'
       path: '/sorteio'
       fullPath: '/sorteio'
-      preLoaderRoute: typeof SorteioRouteImport
-      parentRoute: typeof rootRouteImport
+      preLoaderRoute: typeof AuthenticatedSorteioRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/time': {
+      id: '/_authenticated/time'
+      path: '/time'
+      fullPath: '/time'
+      preLoaderRoute: typeof AuthenticatedTimeRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedRachaoRoute: typeof AuthenticatedRachaoRoute
+  AuthenticatedSorteioRoute: typeof AuthenticatedSorteioRoute
+  AuthenticatedTimeRoute: typeof AuthenticatedTimeRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedRachaoRoute: AuthenticatedRachaoRoute,
+  AuthenticatedSorteioRoute: AuthenticatedSorteioRoute,
+  AuthenticatedTimeRoute: AuthenticatedTimeRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
-  RachaoRoute: RachaoRoute,
-  SorteioRoute: SorteioRoute,
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  AuthRoute: AuthRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
