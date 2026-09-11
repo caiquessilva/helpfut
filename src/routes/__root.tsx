@@ -11,8 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
-import { StoreProvider } from "../lib/store";
-import { BottomNav } from "../components/BottomNav";
+import { StoreProvider } from "@/lib/store";
+import { BottomNav } from "@/components/BottomNav";
 
 function NotFoundComponent() {
   return (
