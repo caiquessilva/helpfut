@@ -93,8 +93,7 @@ function Rachao() {
       nome: form.nome,
       idade: Number(form.idade) || 0,
       posicao: form.posicao,
-      nivel: form.nivel,
-      folego: form.folego,
+      estrelas: form.estrelas,
       presente: true,
     };
     setJogadores([...jogadores, novo]);
