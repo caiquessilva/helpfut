@@ -79,8 +79,8 @@ const timeInicial: Time = {
   rua: "Praça da Sé",
   cidade: "São Paulo",
   disponibilidade: [
-    { dia: "Qua", periodos: ["Noite"] },
-    { dia: "Sáb", periodos: ["Manhã", "Tarde"] },
+    { dia: "Qua", horarios: ["20:00"] },
+    { dia: "Sáb", horarios: ["09:00", "15:30"] },
   ],
   mando: "Mandante",
 };
