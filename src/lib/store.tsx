@@ -15,7 +15,7 @@ export interface Time {
   instagram: string;
   whatsapp: string;
   email: string;
-  telefone: string;
+  
   cep: string;
   rua: string;
   cidade: string;
@@ -74,7 +74,7 @@ const timeInicial: Time = {
   instagram: "@gremiovarzeafc",
   whatsapp: "11999998888",
   email: "contato@gremiovarzea.com",
-  telefone: "(11) 99999-8888",
+  
   cep: "01001-000",
   rua: "Praça da Sé",
   cidade: "São Paulo",
