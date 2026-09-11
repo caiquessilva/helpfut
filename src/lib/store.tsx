@@ -28,7 +28,6 @@ export interface Trofeu {
   titulo: string;
   ano: string;
   descricao: string;
-  foto: string;
 }
 
 export type Posicao = "Goleiro" | "Defesa" | "Meio-campo" | "Ataque";
