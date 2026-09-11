@@ -14,7 +14,13 @@ export function Page({ title, subtitle, children }: { title: string; subtitle?: 
   );
 }
 
-export function Card({ className, children }: { className?: string; children: ReactNode }) {
+export function Card({
+  className,
+  children,
+}: {
+  className?: string | undefined;
+  children: ReactNode;
+}) {
   return (
     <section className={cn("rounded-2xl border border-border bg-card p-4 shadow-sm", className)}>
       {children}
