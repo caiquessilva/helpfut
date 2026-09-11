@@ -151,6 +151,7 @@ export function StoreProvider({ children, userId }: { children: React.ReactNode;
 
   React.useEffect(() => {
     let ativo = true;
+    hidratado.current = false;
     const carregar = async () => {
       setCarregando(true);
       setErro("");
