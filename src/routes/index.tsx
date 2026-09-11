@@ -322,12 +322,12 @@ function Varzea() {
           ) : null}
 
           {agenda.length ? (
-            <div className="flex flex-wrap gap-2">
+            <div className="-mx-1 flex snap-x snap-mandatory gap-2 overflow-x-auto px-1 pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               {agenda.flatMap((d) =>
                 d.horarios.map((h) => (
                   <span
                     key={`${d.dia}-${h}`}
-                    className="whitespace-nowrap rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold leading-tight text-primary"
+                    className="shrink-0 snap-start whitespace-nowrap rounded-full bg-primary/15 px-3 py-1 text-xs font-semibold leading-tight text-primary"
                   >
                     {DIA_LONGO[d.dia]} · {h}
                   </span>
