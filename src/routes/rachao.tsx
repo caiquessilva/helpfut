@@ -1,18 +1,59 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
-import { X } from "lucide-react";
+import { X, Star } from "lucide-react";
 import { Page, Card, Field, Input, Select, Button } from "@/components/ui-kit";
 import {
-  FOLEGOS,
-  NIVEIS,
+  ESTRELAS,
+  LEGENDA_ESTRELAS,
   POSICOES,
   scoreTotal,
   useStore,
-  type Folego,
+  type Estrelas,
   type Jogador,
-  type Nivel,
   type Posicao,
 } from "@/lib/store";
+
+function SeletorEstrelas({
+  valor,
+  onChange,
+}: {
+  valor: Estrelas;
+  onChange: (v: Estrelas) => void;
+}) {
+  return (
+    <div>
+      <div className="flex gap-1.5">
+        {ESTRELAS.map((n) => (
+          <button
+            key={n}
+            type="button"
+            aria-label={`${n} estrela${n > 1 ? "s" : ""} — ${LEGENDA_ESTRELAS[n]}`}
+            onClick={() => onChange(n)}
+            className="p-0.5"
+          >
+            <Star
+              className={
+                n <= valor
+                  ? "size-7 fill-primary text-primary"
+                  : "size-7 text-muted-foreground"
+              }
+            />
+          </button>
+        ))}
+      </div>
+      <p className="mt-1.5 text-xs font-semibold text-primary">
+        {valor} ★ — {LEGENDA_ESTRELAS[valor]}
+      </p>
+      <ul className="mt-1 space-y-0.5 text-[11px] leading-tight text-muted-foreground">
+        {ESTRELAS.map((n) => (
+          <li key={n}>
+            {n} estrela{n > 1 ? "s" : ""} = {LEGENDA_ESTRELAS[n]}
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/rachao")({
   head: () => ({
