@@ -6,6 +6,16 @@ import { TrofeusSection } from "@/components/TrofeusSection";
 import { lerArquivoComoDataUrl } from "@/lib/imagem";
 import { DIAS, useStore, type Dia } from "@/lib/store";
 
+const DIA_LONGO: Record<Dia, string> = {
+  Seg: "Segunda",
+  Ter: "Terça",
+  Qua: "Quarta",
+  Qui: "Quinta",
+  Sex: "Sexta",
+  Sáb: "Sábado",
+  Dom: "Domingo",
+};
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
