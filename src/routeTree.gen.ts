@@ -10,33 +10,63 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as RachaoRouteImport } from './routes/rachao'
+import { Route as SorteioRouteImport } from './routes/sorteio'
+import { Route as TrofeusRouteImport } from './routes/trofeus'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const RachaoRoute = RachaoRouteImport.update({
+  id: '/rachao',
+  path: '/rachao',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SorteioRoute = SorteioRouteImport.update({
+  id: '/sorteio',
+  path: '/sorteio',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const TrofeusRoute = TrofeusRouteImport.update({
+  id: '/trofeus',
+  path: '/trofeus',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/rachao': typeof RachaoRoute
+  '/sorteio': typeof SorteioRoute
+  '/trofeus': typeof TrofeusRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/rachao': typeof RachaoRoute
+  '/sorteio': typeof SorteioRoute
+  '/trofeus': typeof TrofeusRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/rachao': typeof RachaoRoute
+  '/sorteio': typeof SorteioRoute
+  '/trofeus': typeof TrofeusRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/rachao' | '/sorteio' | '/trofeus'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/rachao' | '/sorteio' | '/trofeus'
+  id: '__root__' | '/' | '/rachao' | '/sorteio' | '/trofeus'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  RachaoRoute: typeof RachaoRoute
+  SorteioRoute: typeof SorteioRoute
+  TrofeusRoute: typeof TrofeusRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +78,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/rachao': {
+      id: '/rachao'
+      path: '/rachao'
+      fullPath: '/rachao'
+      preLoaderRoute: typeof RachaoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sorteio': {
+      id: '/sorteio'
+      path: '/sorteio'
+      fullPath: '/sorteio'
+      preLoaderRoute: typeof SorteioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/trofeus': {
+      id: '/trofeus'
+      path: '/trofeus'
+      fullPath: '/trofeus'
+      preLoaderRoute: typeof TrofeusRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  RachaoRoute: RachaoRoute,
+  SorteioRoute: SorteioRoute,
+  TrofeusRoute: TrofeusRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
