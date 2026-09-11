@@ -206,7 +206,7 @@ function Varzea() {
         </Card>
 
         <Card className="space-y-3">
-          <h2 className="text-sm font-bold text-foreground">Endereço do campo</h2>
+          <h2 className="text-sm font-bold text-foreground">Sede do Time</h2>
           <div className="flex items-end gap-2">
             <div className="flex-1">
               <Field label="CEP">
