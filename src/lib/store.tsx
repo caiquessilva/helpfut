@@ -5,7 +5,7 @@ export type Dia = "Seg" | "Ter" | "Qua" | "Qui" | "Sex" | "Sáb" | "Dom";
 
 export interface Disponibilidade {
   dia: Dia;
-  periodos: Periodo[];
+  horarios: string[];
 }
 
 export interface Time {
