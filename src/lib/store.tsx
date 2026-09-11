@@ -105,25 +105,24 @@ function j(
   nome: string,
   idade: number,
   posicao: Posicao,
-  nivel: Nivel,
-  folego: Folego,
+  estrelas: Estrelas,
 ): Jogador {
-  return { id, nome, idade, posicao, nivel, folego, presente: true };
+  return { id, nome, idade, posicao, estrelas, presente: true };
 }
 
 const jogadoresIniciais: Jogador[] = [
-  j("p1", "Marcão", 41, "Goleiro", "Destaque", "Mediano"),
-  j("p2", "Léo Paredão", 28, "Goleiro", "Mediano", "Pouco"),
-  j("p3", "Rafa", 22, "Defesa", "Já jogou base/pro", "Mito/Inteiro"),
-  j("p4", "Tião", 36, "Defesa", "Mediano", "Mediano"),
-  j("p5", "Juninho", 19, "Meio-campo", "Destaque", "Mito/Inteiro"),
-  j("p6", "Serginho", 52, "Meio-campo", "Mediano", "Pouco"),
-  j("p7", "Vitinho", 24, "Ataque", "Destaque", "Mediano"),
-  j("p8", "Betão", 45, "Ataque", "Café com Leite", "Pouco"),
-  j("p9", "Diego", 31, "Defesa", "Destaque", "Mediano"),
-  j("p10", "Kaio", 20, "Ataque", "Mediano", "Mito/Inteiro"),
-  j("p11", "Fernando", 38, "Meio-campo", "Já jogou base/pro", "Mediano"),
-  j("p12", "Zeca", 47, "Defesa", "Mediano", "Pouco"),
+  j("p1", "Marcão", 41, "Goleiro", 4),
+  j("p2", "Léo Paredão", 28, "Goleiro", 2),
+  j("p3", "Rafa", 22, "Defesa", 5),
+  j("p4", "Tião", 36, "Defesa", 3),
+  j("p5", "Juninho", 19, "Meio-campo", 4),
+  j("p6", "Serginho", 52, "Meio-campo", 2),
+  j("p7", "Vitinho", 24, "Ataque", 4),
+  j("p8", "Betão", 45, "Ataque", 1),
+  j("p9", "Diego", 31, "Defesa", 3),
+  j("p10", "Kaio", 20, "Ataque", 3),
+  j("p11", "Fernando", 38, "Meio-campo", 5),
+  j("p12", "Zeca", 47, "Defesa", 2),
 ];
 
 interface Store {
