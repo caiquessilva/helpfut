@@ -158,8 +158,18 @@ function usePersisted<T>(key: string, inicial: T) {
   return [state, set] as const;
 }
 
+const HORA_PERIODO: Record<string, string> = { "Manhã": "09:00", Tarde: "15:00", Noite: "20:00" };
+
 export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [time, setTime] = usePersisted("helpfut.time", timeInicial);
+  const [timeRaw, setTime] = usePersisted("helpfut.time", timeInicial);
+  const time = React.useMemo<Time>(() => {
+    const disponibilidade = (timeRaw.disponibilidade ?? []).map((d) => {
+      const legado = (d as unknown as { periodos?: string[] }).periodos;
+      const horarios = d.horarios ?? legado?.map((p) => HORA_PERIODO[p] ?? "20:00") ?? [];
+      return { dia: d.dia, horarios: [...new Set(horarios)].sort() };
+    });
+    return { ...timeRaw, disponibilidade };
+  }, [timeRaw]);
   const [trofeus, setTrofeus] = usePersisted("helpfut.trofeus", trofeusIniciais);
   const [jogadoresRaw, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
   const jogadores = React.useMemo(
