@@ -30,6 +30,8 @@ export const Route = createFileRoute("/_authenticated/time")({
         property: "og:description",
         content: "Gestão completa do seu time de várzea: perfil, contatos, disponibilidade e conquistas.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Varzea,

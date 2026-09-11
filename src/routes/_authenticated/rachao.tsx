@@ -69,6 +69,8 @@ export const Route = createFileRoute("/_authenticated/rachao")({
         property: "og:description",
         content: "Lista de presença e pontuação automática dos jogadores do rachão.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Rachao,

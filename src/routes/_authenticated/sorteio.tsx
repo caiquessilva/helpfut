@@ -18,6 +18,8 @@ export const Route = createFileRoute("/_authenticated/sorteio")({
         property: "og:description",
         content: "Times equilibrados em segundos com o algoritmo snake draft do HELPFUT.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary" },
     ],
   }),
   component: Sorteio,
