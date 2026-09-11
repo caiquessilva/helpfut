@@ -4,7 +4,7 @@ import { Instagram, Mail, MessageCircle, Camera } from "lucide-react";
 import { Page, Card, Field, Input, Textarea, Button, Chip } from "@/components/ui-kit";
 import { TrofeusSection } from "@/components/TrofeusSection";
 import { lerArquivoComoDataUrl } from "@/lib/imagem";
-import { DIAS, PERIODOS, useStore, type Dia, type Periodo } from "@/lib/store";
+import { DIAS, useStore, type Dia } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
   head: () => ({
