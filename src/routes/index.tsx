@@ -63,24 +63,28 @@ function Varzea() {
     }
   };
 
-  const togglePeriodo = (dia: Dia, periodo: Periodo) => {
-    const atual = time.disponibilidade.find((d) => d.dia === dia);
-    let lista = time.disponibilidade;
-    if (!atual) {
-      lista = [...lista, { dia, periodos: [periodo] }];
-    } else {
-      const periodos = atual.periodos.includes(periodo)
-        ? atual.periodos.filter((p) => p !== periodo)
-        : [...atual.periodos, periodo];
-      lista = lista
-        .map((d) => (d.dia === dia ? { ...d, periodos } : d))
-        .filter((d) => d.periodos.length > 0);
-    }
+  const horariosDoDia = (dia: Dia) => time.disponibilidade.find((d) => d.dia === dia)?.horarios ?? [];
+
+  const setHorarios = (dia: Dia, horarios: string[]) => {
+    const ordenados = [...new Set(horarios)].sort();
+    const existe = time.disponibilidade.some((d) => d.dia === dia);
+    const lista = (existe
+      ? time.disponibilidade.map((d) => (d.dia === dia ? { ...d, horarios: ordenados } : d))
+      : [...time.disponibilidade, { dia, horarios: ordenados }]
+    ).filter((d) => d.horarios.length > 0);
     setTime({ ...time, disponibilidade: lista });
   };
 
-  const ativo = (dia: Dia, periodo: Periodo) =>
-    !!time.disponibilidade.find((d) => d.dia === dia)?.periodos.includes(periodo);
+  const adicionarHorario = (dia: Dia) => {
+    const hora = novoHorario[dia];
+    if (!hora) return;
+    setHorarios(dia, [...horariosDoDia(dia), hora]);
+    setNovoHorario({ ...novoHorario, [dia]: "" });
+  };
+
+  const agenda = DIAS.map((dia) => ({ dia, horarios: horariosDoDia(dia) })).filter(
+    (d) => d.horarios.length > 0,
+  );
 
   const instaUser = time.instagram.trim().replace(/^@/, "").replace(/^https?:\/\/.*instagram\.com\//, "");
   const zap = time.whatsapp.replace(/\D/g, "");
