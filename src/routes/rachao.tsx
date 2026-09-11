@@ -167,8 +167,30 @@ function Rachao() {
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-foreground">{j.nome}</p>
                 <p className="text-xs text-muted-foreground">
-                  {j.posicao} · {j.idade} anos · {j.nivel} · {j.folego}
+                  {j.posicao} · {j.idade} anos · {LEGENDA_ESTRELAS[j.estrelas]}
                 </p>
+                <div className="mt-1 flex gap-0.5">
+                  {ESTRELAS.map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      aria-label={`Definir ${n} estrela${n > 1 ? "s" : ""} para ${j.nome}`}
+                      onClick={() =>
+                        setJogadores(
+                          jogadores.map((x) => (x.id === j.id ? { ...x, estrelas: n } : x)),
+                        )
+                      }
+                    >
+                      <Star
+                        className={
+                          n <= j.estrelas
+                            ? "size-4 fill-primary text-primary"
+                            : "size-4 text-muted-foreground"
+                        }
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
               <span className="rounded-lg bg-primary/15 px-2 py-1 text-xs font-bold text-primary">
                 {scoreTotal(j)} pts
