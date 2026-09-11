@@ -161,7 +161,11 @@ function usePersisted<T>(key: string, inicial: T) {
 export function StoreProvider({ children }: { children: React.ReactNode }) {
   const [time, setTime] = usePersisted("helpfut.time", timeInicial);
   const [trofeus, setTrofeus] = usePersisted("helpfut.trofeus", trofeusIniciais);
-  const [jogadores, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
+  const [jogadoresRaw, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
+  const jogadores = React.useMemo(
+    () => jogadoresRaw.map((p) => ({ ...p, estrelas: (p.estrelas ?? 3) as Estrelas })),
+    [jogadoresRaw],
+  );
   const value = React.useMemo(
     () => ({ time, setTime, trofeus, setTrofeus, jogadores, setJogadores }),
     [time, setTime, trofeus, setTrofeus, jogadores, setJogadores],
