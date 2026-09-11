@@ -130,26 +130,14 @@ function Rachao() {
               ))}
             </Select>
           </Field>
-          <Field label="Nível técnico">
-            <Select
-              value={form.nivel}
-              onChange={(e) => setForm({ ...form, nivel: e.target.value as Nivel })}
-            >
-              {NIVEIS.map((n) => (
-                <option key={n}>{n}</option>
-              ))}
-            </Select>
-          </Field>
-          <Field label="Fôlego">
-            <Select
-              value={form.folego}
-              onChange={(e) => setForm({ ...form, folego: e.target.value as Folego })}
-            >
-              {FOLEGOS.map((f) => (
-                <option key={f}>{f}</option>
-              ))}
-            </Select>
-          </Field>
+          <div className="col-span-2">
+            <Field label="Avaliação geral">
+              <SeletorEstrelas
+                valor={form.estrelas}
+                onChange={(v) => setForm({ ...form, estrelas: v })}
+              />
+            </Field>
+          </div>
         </div>
         <Button className="w-full" onClick={adicionar}>
           Cadastrar jogador
