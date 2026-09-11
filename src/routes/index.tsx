@@ -235,20 +235,60 @@ function Varzea() {
         </Card>
 
         <Card className="space-y-3">
-          <h2 className="text-sm font-bold text-foreground">Dias de jogo disponíveis</h2>
-          <div className="space-y-2">
+          <h2 className="text-sm font-bold text-foreground">Dias e horários de jogo</h2>
+          <div className="space-y-3">
             {DIAS.map((dia) => (
-              <div key={dia} className="flex items-center gap-2">
-                <span className="w-10 text-xs font-bold text-muted-foreground">{dia}</span>
-                <div className="flex flex-wrap gap-1.5">
-                  {PERIODOS.map((p) => (
-                    <Chip key={p} active={ativo(dia, p)} onClick={() => togglePeriodo(dia, p)}>
-                      {p}
-                    </Chip>
-                  ))}
+              <div key={dia} className="space-y-1.5">
+                <div className="flex items-center gap-2">
+                  <span className="w-10 text-xs font-bold text-muted-foreground">{dia}</span>
+                  <Input
+                    type="time"
+                    aria-label={`Horário de jogo em ${dia}`}
+                    className="w-32"
+                    value={novoHorario[dia] ?? ""}
+                    onChange={(e) => setNovoHorario({ ...novoHorario, [dia]: e.target.value })}
+                  />
+                  <Button type="button" onClick={() => adicionarHorario(dia)}>
+                    Adicionar
+                  </Button>
                 </div>
+                {horariosDoDia(dia).length ? (
+                  <div className="ml-12 flex flex-wrap gap-1.5">
+                    {horariosDoDia(dia).map((h) => (
+                      <Chip
+                        key={h}
+                        active
+                        onClick={() =>
+                          setHorarios(
+                            dia,
+                            horariosDoDia(dia).filter((x) => x !== h),
+                          )
+                        }
+                      >
+                        {h} ✕
+                      </Chip>
+                    ))}
+                  </div>
+                ) : null}
               </div>
             ))}
+          </div>
+
+          <div className="rounded-xl bg-secondary/60 p-3">
+            <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+              Agenda do time
+            </span>
+            {agenda.length ? (
+              <ul className="space-y-1">
+                {agenda.map((d) => (
+                  <li key={d.dia} className="text-sm text-foreground">
+                    <span className="font-bold text-primary">{d.dia}</span> — {d.horarios.join(" · ")}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-xs text-muted-foreground">Nenhum dia definido ainda.</p>
+            )}
           </div>
           <div>
             <span className="mb-1 block text-xs font-semibold uppercase tracking-wide text-muted-foreground">
