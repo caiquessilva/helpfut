@@ -11,6 +11,8 @@ import { useEffect, type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
 import { reportLovableError } from "../lib/lovable-error-reporting";
+import { StoreProvider } from "../lib/store";
+import { BottomNav } from "../components/BottomNav";
 
 function NotFoundComponent() {
   return (
@@ -77,11 +79,17 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { title: "HELPFUT — Futebol Amador" },
+      {
+        name: "description",
+        content: "Gestão do time de várzea e sorteio inteligente de times para o rachão.",
+      },
+      { name: "author", content: "HELPFUT" },
+      { property: "og:title", content: "HELPFUT — Futebol Amador" },
+      {
+        property: "og:description",
+        content: "Perfil do time, troféus, jogadores e sorteio equilibrado em um só app.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:site", content: "@Lovable" },
@@ -102,7 +110,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="pt-BR" className="dark">
       <head>
         <HeadContent />
       </head>
@@ -119,8 +127,11 @@ function RootComponent() {
 
   return (
     <QueryClientProvider client={queryClient}>
-      {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
-      <Outlet />
+      <StoreProvider>
+        {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
+        <Outlet />
+        <BottomNav />
+      </StoreProvider>
     </QueryClientProvider>
   );
 }
