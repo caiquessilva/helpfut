@@ -1,4 +1,5 @@
 import * as React from "react";
+import { supabase } from "@/integrations/supabase/client";
 
 export type Periodo = "Manhã" | "Tarde" | "Noite";
 export type Dia = "Seg" | "Ter" | "Qua" | "Qui" | "Sex" | "Sáb" | "Dom";
@@ -132,36 +133,73 @@ interface Store {
   setTrofeus: (t: Trofeu[]) => void;
   jogadores: Jogador[];
   setJogadores: (j: Jogador[]) => void;
+  carregando: boolean;
+  erro: string;
 }
 
 const Ctx = React.createContext<Store | null>(null);
 
-function usePersisted<T>(key: string, inicial: T) {
-  const [state, setState] = React.useState<T>(inicial);
-  React.useEffect(() => {
-    const raw = localStorage.getItem(key);
-    if (raw) {
-      try {
-        setState(JSON.parse(raw) as T);
-      } catch {
-        /* ignora */
-      }
-    }
-  }, [key]);
-  const set = React.useCallback(
-    (v: T) => {
-      setState(v);
-      localStorage.setItem(key, JSON.stringify(v));
-    },
-    [key],
-  );
-  return [state, set] as const;
-}
-
 const HORA_PERIODO: Record<string, string> = { "Manhã": "09:00", Tarde: "15:00", Noite: "20:00" };
 
-export function StoreProvider({ children }: { children: React.ReactNode }) {
-  const [timeRaw, setTime] = usePersisted("helpfut.time", timeInicial);
+export function StoreProvider({ children, userId }: { children: React.ReactNode; userId: string }) {
+  const [timeRaw, setTime] = React.useState<Time>(timeInicial);
+  const [trofeus, setTrofeus] = React.useState<Trofeu[]>(trofeusIniciais);
+  const [jogadoresRaw, setJogadores] = React.useState<Jogador[]>(jogadoresIniciais);
+  const [carregando, setCarregando] = React.useState(true);
+  const [erro, setErro] = React.useState("");
+  const hidratado = React.useRef(false);
+
+  React.useEffect(() => {
+    let ativo = true;
+    const carregar = async () => {
+      setCarregando(true);
+      setErro("");
+      const { data, error } = await supabase
+        .from("team_profiles")
+        .select("team, trophies, players")
+        .eq("user_id", userId)
+        .maybeSingle();
+      if (!ativo) return;
+      if (error) {
+        setErro("Não foi possível carregar os dados do time.");
+        setCarregando(false);
+        return;
+      }
+      if (data) {
+        setTime(data.team as unknown as Time);
+        setTrofeus(data.trophies as unknown as Trofeu[]);
+        setJogadores(data.players as unknown as Jogador[]);
+      } else {
+        const { error: insertError } = await supabase.from("team_profiles").insert({
+          user_id: userId,
+          team: timeInicial as unknown as never,
+          trophies: trofeusIniciais as unknown as never,
+          players: jogadoresIniciais as unknown as never,
+        });
+        if (insertError) setErro("Não foi possível criar o perfil do time.");
+      }
+      hidratado.current = true;
+      setCarregando(false);
+    };
+    void carregar();
+    return () => { ativo = false; };
+  }, [userId]);
+
+  React.useEffect(() => {
+    if (!hidratado.current) return;
+    const timer = window.setTimeout(async () => {
+      const { error } = await supabase.from("team_profiles").upsert({
+        user_id: userId,
+        team: timeRaw as unknown as never,
+        trophies: trofeus as unknown as never,
+        players: jogadoresRaw as unknown as never,
+        updated_at: new Date().toISOString(),
+      }, { onConflict: "user_id" });
+      setErro(error ? "Não foi possível salvar as alterações." : "");
+    }, 350);
+    return () => window.clearTimeout(timer);
+  }, [jogadoresRaw, timeRaw, trofeus, userId]);
+
   const time = React.useMemo<Time>(() => {
     const disponibilidade = (timeRaw.disponibilidade ?? []).map((d) => {
       const legado = (d as unknown as { periodos?: string[] }).periodos;
@@ -170,16 +208,20 @@ export function StoreProvider({ children }: { children: React.ReactNode }) {
     });
     return { ...timeRaw, disponibilidade };
   }, [timeRaw]);
-  const [trofeus, setTrofeus] = usePersisted("helpfut.trofeus", trofeusIniciais);
-  const [jogadoresRaw, setJogadores] = usePersisted("helpfut.jogadores", jogadoresIniciais);
   const jogadores = React.useMemo(
     () => jogadoresRaw.map((p) => ({ ...p, estrelas: (p.estrelas ?? 3) as Estrelas })),
     [jogadoresRaw],
   );
   const value = React.useMemo(
-    () => ({ time, setTime, trofeus, setTrofeus, jogadores, setJogadores }),
-    [time, setTime, trofeus, setTrofeus, jogadores, setJogadores],
+    () => ({ time, setTime, trofeus, setTrofeus, jogadores, setJogadores, carregando, erro }),
+    [time, trofeus, jogadores, carregando, erro],
   );
+  if (carregando) {
+    return <main className="grid min-h-screen place-items-center bg-background text-sm text-muted-foreground">Carregando seu time...</main>;
+  }
+  if (erro && !hidratado.current) {
+    return <main className="grid min-h-screen place-items-center bg-background px-6 text-center text-sm text-destructive">{erro}</main>;
+  }
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }
 
